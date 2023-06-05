@@ -4,11 +4,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import services.SearchAll;
 import services.SearchMovies;
 
 public class IMDBClient {
 
     public SearchMovies searchMoviesService;
+    public SearchAll searchAllService;
 
     public IMDBClient() {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
@@ -22,5 +24,6 @@ public class IMDBClient {
                 .build();
 
         searchMoviesService = retrofit.create(SearchMovies.class);
+        searchAllService = retrofit.create(SearchAll.class);
     }
 }

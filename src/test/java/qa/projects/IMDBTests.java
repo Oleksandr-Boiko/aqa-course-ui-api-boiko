@@ -1,6 +1,7 @@
 package qa.projects;
 
 import clients.IMDBClient;
+import models.All;
 import models.Movies;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,5 +31,12 @@ public class IMDBTests {
         Movies movies = imdbClient.searchMoviesService.getMovie(apiKey, "batman 1994").execute().body();
         Assert.assertTrue(movies.moviesValue.get(0).title.contains("Batman"), "Title not contains");
         Assert.assertTrue(!movies.moviesValue.get(0).description.contains("1994") && !movies.moviesValue.get(0).title.contains("1994"));
+    }
+
+    @Test
+    public void severalRequests() throws IOException {
+        All all = imdbClient.searchAllService.getAll(apiKey, "batman").execute().body();
+        Movies movies = imdbClient.searchMoviesService.getMovie(apiKey, "batman").execute().body();
+        Assert.assertTrue(movies.moviesValue.size() > all.allValue.size());
     }
 }

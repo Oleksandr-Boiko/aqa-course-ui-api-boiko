@@ -9,6 +9,8 @@ public class Movies {
     @SerializedName("results")
     public List<Movie> moviesValue;
 
+    public String errorMessage;
+
     @Override
     public String toString() {
         return "Movies{" +

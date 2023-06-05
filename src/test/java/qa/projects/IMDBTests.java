@@ -1,12 +1,15 @@
 package qa.projects;
 
 import clients.IMDBClient;
+import models.AdvancedAll;
 import models.All;
 import models.Movies;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IMDBTests {
     private IMDBClient imdbClient = new IMDBClient();
@@ -38,5 +41,14 @@ public class IMDBTests {
         All all = imdbClient.searchAllService.getAll(apiKey, "batman").execute().body();
         Movies movies = imdbClient.searchMoviesService.getMovie(apiKey, "batman").execute().body();
         Assert.assertTrue(movies.moviesValue.size() > all.allValue.size());
+    }
+
+    @Test
+    public void sendAdvancedSearch() throws IOException {
+        List<String> listOfGenres = new ArrayList<>();
+        listOfGenres.add("comedy");
+        listOfGenres.add("thriller");
+        AdvancedAll all = imdbClient.advancedSearch.getAdvanceSearch(apiKey, listOfGenres).execute().body();
+        Assert.assertTrue(all.allValues.get(0).genres.contains("Comedy") || all.allValues.get(0).genres.contains("Thriller"));
     }
 }

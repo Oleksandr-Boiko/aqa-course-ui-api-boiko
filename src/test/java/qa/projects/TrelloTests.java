@@ -8,6 +8,8 @@ import models.Organization;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +24,6 @@ public class TrelloTests {
     private String cardName = "myNewCard";
     private String boardID;
     Organization org;
-    Board newBoard;
 
     @BeforeClass
     public void createNewOrganizationTest() throws IOException {
@@ -31,20 +32,22 @@ public class TrelloTests {
 
     @Test
     public void createNewBoard() throws IOException {
-        newBoard = trelloClient.boardService.createBoard(boardName, org.id, apiKey, apiToken).execute().body();
-        boardID = newBoard.id;
-        Assert.assertTrue(newBoard.name.equals(boardName));
-        //CHECK STATUS CODE
+        Call<Board> call = trelloClient.boardService.createBoard(boardName, org.id, apiKey, apiToken);
+        Response<Board> response = call.execute();
+        boardID = response.body().id;
+        Assert.assertTrue(response.isSuccessful());
+        Assert.assertTrue(response.body().name.equals(boardName));
     }
 
     @Test(dependsOnMethods = {"createNewBoard"})
     public void addCardToList() throws IOException {
-        List<Lists> list = trelloClient.listsService.getLists(newBoard.id, apiKey, apiToken).execute().body();
+        List<Lists> list = trelloClient.listsService.getLists(boardID, apiKey, apiToken).execute().body();
         String idOfList = list.get(0).id;
-        Card newCard = trelloClient.cardService.createCard(cardName, idOfList, apiKey, apiToken).execute().body();
-        //CHECK STATUS CODE
-        String idOfCard = newCard.id;
-        Assert.assertTrue(newCard.name.equals(cardName));
+        Call<Card> call = trelloClient.cardService.createCard(cardName, idOfList, apiKey, apiToken);
+        Response<Card> response = call.execute();
+        Assert.assertTrue(response.isSuccessful());
+        String idOfCard = response.body().id;
+        Assert.assertTrue(response.body().name.equals(cardName));
         Card card = trelloClient.cardService.getCard(boardID, idOfCard, apiKey, apiToken).execute().body();
         Assert.assertTrue(card.name.equals(cardName));
 

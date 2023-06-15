@@ -2,6 +2,9 @@ package qa.projects;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Owner;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -12,6 +15,8 @@ import pages.MainPage;
 import static com.codeborne.selenide.Selenide.open;
 import static pages.MainPage.checkListOfGoodsLoaded;
 
+@Owner("Boiko Oleksandr")
+@Epic("Rozetka")
 public class RozetkaTests {
 
     private String iphone = "iphone";
@@ -29,6 +34,7 @@ public class RozetkaTests {
         open(MainPage.baseURL);
     }
 
+    @Description("Check cart functionality")
     @Test(description = "Actions with cart")
     public void test1() {
         MainPage.cartButton.click();

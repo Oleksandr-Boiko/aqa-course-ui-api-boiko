@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="UI Tests">
+    <test name="Rozetka UI tests">
+        <classes>
+            <class name="qa.projects.RozetkaTests"></class>
+        </classes>
+    </test>
+</suite>

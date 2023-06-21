@@ -2,15 +2,17 @@ package qa.projects;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.CartPage;
+import pages.ListOfGoodsPage;
 import pages.MainPage;
 
 import static com.codeborne.selenide.Selenide.open;
-import static pages.MainPage.checkListOfGoodsLoaded;
+import static pages.ListOfGoodsPage.checkListOfGoodsLoaded;
 
 public class RozetkaTests {
 
@@ -21,6 +23,7 @@ public class RozetkaTests {
 
     @BeforeClass
     public void openSite() {
+        Configuration.browserSize = "1366x768";
         open(MainPage.baseURL);
     }
 
@@ -36,8 +39,8 @@ public class RozetkaTests {
         CartPage.cartEmptyState.shouldBe(Condition.visible);
         CartPage.closeModalButton.click();
         MainPage.search(iphone);
-        MainPage.listOfGoods.shouldHave(CollectionCondition.size(28));
-        MainPage.buyButton.get(0).hover().click();
+        ListOfGoodsPage.listOfGoods.shouldHave(CollectionCondition.size(28));
+        ListOfGoodsPage.buyButton.get(0).hover().click();
         MainPage.cartBadgeIcon.shouldBe(Condition.text("1"));
         MainPage.cartButton.click();
         CartPage.cartEmptyState.shouldBe(Condition.hidden);
@@ -50,48 +53,49 @@ public class RozetkaTests {
     @Test(description = "Check list of categories")
     public void test2() {
         MainPage.search(apple);
-        MainPage.listOfCategories.shouldHave(CollectionCondition.size(20));
-        MainPage.listOfCategories.get(0).click();
-        MainPage.catalogHeader.shouldHave(Condition.text(apple));
+        ListOfGoodsPage.listOfCategories.shouldHave(CollectionCondition.size(20));
+        ListOfGoodsPage.listOfCategories.get(0).click();
+        ListOfGoodsPage.catalogHeader.shouldHave(Condition.text(apple));
     }
 
     @Test(description = "Check filters functionality")
     public void test3() {
         MainPage.search(iphone13);
-        MainPage.seriesFilters.find(Condition.text("iPhone 13")).shouldHave(Condition.cssClass("checkbox-filter__link--checked"));
-        int countOfGoods = MainPage.listOfGoods.size();
-        MainPage.sellerFilters.find(Condition.text("Rozetka")).click();
-        MainPage.seriesFilters.find(Condition.text("iPhone 14")).click();
-        MainPage.listOfGoods.shouldBe(CollectionCondition.sizeGreaterThan(countOfGoods));
+        ListOfGoodsPage.seriesFilters.find(Condition.text("iPhone 13")).shouldHave(Condition.cssClass("checkbox-filter__link--checked"));
+        int countOfGoods = ListOfGoodsPage.listOfGoods.size();
+        ListOfGoodsPage.sellerFilters.find(Condition.text("Rozetka")).click();
+        ListOfGoodsPage.seriesFilters.find(Condition.text("iPhone 14")).click();
+        ListOfGoodsPage.listOfGoods.shouldBe(CollectionCondition.sizeGreaterThan(countOfGoods));
     }
 
     @Test(description = "Check size switcher of goods")
-    public void test4() throws InterruptedException {
+    public void test4() {
         MainPage.search(iphone13);
         checkListOfGoodsLoaded();
         int smallGoodsheight = 455;
         int smallGoodswidth = 207;
-        Assert.assertEquals(smallGoodsheight, MainPage.listOfGoods.get(0).getSize().getHeight(), "height not equals");
-        Assert.assertEquals(smallGoodswidth, MainPage.listOfGoods.get(0).getSize().getWidth(), "width not equals");
-        MainPage.bigTileButton.click();
-        MainPage.bigTileButton.shouldHave(Condition.cssClass("catalog-view__button_state_active"));
+        Assert.assertEquals(smallGoodsheight, ListOfGoodsPage.listOfGoods.get(0).getSize().getHeight(), "height not equals");
+        Assert.assertEquals(smallGoodswidth, ListOfGoodsPage.listOfGoods.get(0).getSize().getWidth(), "width not equals");
+        ListOfGoodsPage.bigTileButton.click();
+        ListOfGoodsPage.bigTileButton.shouldHave(Condition.cssClass("catalog-view__button_state_active"));
         int bigGoodsheight = 523;
         int bigGoodswidth = 259;
-        Assert.assertEquals(bigGoodsheight, MainPage.listOfGoods.get(0).getSize().getHeight(), "height not equals");
-        Assert.assertEquals(bigGoodswidth, MainPage.listOfGoods.get(0).getSize().getWidth(), "width not equals");
+        Assert.assertEquals(bigGoodsheight, ListOfGoodsPage.listOfGoods.get(0).getSize().getHeight(), "height not equals");
+        Assert.assertEquals(bigGoodswidth, ListOfGoodsPage.listOfGoods.get(0).getSize().getWidth(), "width not equals");
     }
 
     @Test(description = "Check sorting functionality")
-    public void test5() throws InterruptedException {
+    public void test5() {
         MainPage.search(iphone);
         checkListOfGoodsLoaded();
-        MainPage.sorting.shouldBe(Condition.value("4: rank"));
-        MainPage.sorting.selectOptionByValue(sortingValue);
-        MainPage.sorting.shouldBe(Condition.value(sortingValue));
-        MainPage.producerFilters.find(Condition.text(apple)).shouldBe(Condition.visible);
-        MainPage.producerFilters.find(Condition.text(apple)).shouldHave(Condition.cssClass("checkbox-filter__link--checked"));
-        int firstProductValue = Integer.parseInt(MainPage.productPrice.get(0).getText().replaceAll("[^0-9]", ""));
-        int secondProductValue = Integer.parseInt(MainPage.productPrice.get(1).getText().replaceAll("[^0-9]", ""));
+        ListOfGoodsPage.sorting.shouldBe(Condition.value("4: rank"));
+        ListOfGoodsPage.sorting.selectOptionByValue(sortingValue);
+        ListOfGoodsPage.sorting.shouldBe(Condition.value(sortingValue));
+        ListOfGoodsPage.producerFilters.find(Condition.text(apple)).shouldBe(Condition.visible);
+        ListOfGoodsPage.producerFilters.find(Condition.text(apple)).shouldHave(Condition.cssClass("checkbox-filter__link--checked"));
+        checkListOfGoodsLoaded();
+        int firstProductValue = Integer.parseInt(ListOfGoodsPage.productPrice.get(0).getText().replaceAll("[^0-9]", ""));
+        int secondProductValue = Integer.parseInt(ListOfGoodsPage.productPrice.get(1).getText().replaceAll("[^0-9]", ""));
         Assert.assertTrue(firstProductValue > secondProductValue, "first product price not bigger then second product price");
     }
 }

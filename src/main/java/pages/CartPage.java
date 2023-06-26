@@ -1,5 +1,7 @@
 package pages;
 
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
@@ -15,4 +17,25 @@ public class CartPage {
     public static SelenideElement deleteProductButton = $("rz-trash-icon");
     public static SelenideElement closeModalButton = $("button.modal__close");
 
+    public static void closeCart() {
+        closeModalButton.click();
+        closeModalButton.shouldBe(Condition.hidden);
+    }
+
+    public static void deleteProductFromCard() {
+        productActionsButton.click();
+        deleteProductButton.click();
+    }
+
+    public static void checkSizeOfCart(int expectedSize) {
+        listOfProducts.shouldHave(CollectionCondition.size(expectedSize));
+    }
+
+    public static void assertCartIsEmpty() {
+        cartEmptyState.shouldBe(Condition.visible);
+    }
+
+    public static void assertCartIsNotEmpty() {
+        cartEmptyState.shouldBe(Condition.hidden);
+    }
 }

@@ -22,4 +22,9 @@ public class MainPage {
         MainPage.searchField.setValue(text);
         MainPage.searchField.pressEnter();
     }
+
+    public static void openCart() {
+        cartButton.click();
+        CartPage.cartModalName.shouldBe(Condition.text("Корзина"));
+    }
 }

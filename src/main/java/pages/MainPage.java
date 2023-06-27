@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import java.time.Duration;
 
@@ -17,6 +18,7 @@ public class MainPage {
     public static SelenideElement cartBadgeIcon = $("span.badge");
     public static SelenideElement searchField = $("input[name='search']");
 
+    @Step("Searching")
     public static void search(String text) {
         MainPage.searchField.click();
         MainPage.searchField.setValue(text);

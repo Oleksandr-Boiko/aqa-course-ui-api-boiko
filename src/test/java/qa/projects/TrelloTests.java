@@ -1,6 +1,9 @@
 package qa.projects;
 
 import clients.TrelloClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Owner;
 import models.Board;
 import models.Card;
 import models.Lists;
@@ -14,6 +17,8 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.List;
 
+@Owner("Boiko Oleksandr")
+@Epic("Trello")
 public class TrelloTests {
 
     private TrelloClient trelloClient = new TrelloClient();
@@ -30,6 +35,7 @@ public class TrelloTests {
         org = trelloClient.organizationService.createOrganization(orgName, apiKey, apiToken).execute().body();
     }
 
+    @Description("Create new trello board")
     @Test
     public void createNewBoard() throws IOException {
         Call<Board> call = trelloClient.boardService.createBoard(boardName, org.id, apiKey, apiToken);
@@ -39,6 +45,7 @@ public class TrelloTests {
         Assert.assertTrue(response.body().name.equals(boardName));
     }
 
+    @Description("Add card to board")
     @Test(dependsOnMethods = {"createNewBoard"})
     public void addCardToList() throws IOException {
         List<Lists> list = trelloClient.listsService.getLists(boardID, apiKey, apiToken).execute().body();
@@ -53,6 +60,7 @@ public class TrelloTests {
 
     }
 
+    @Description("Delete trello board")
     @Test(dependsOnMethods = {"createNewBoard"})
     public void deleteBoard() throws IOException {
         Boolean response = trelloClient.boardService.deleteBoard(boardID, apiKey, apiToken).execute().isSuccessful();
